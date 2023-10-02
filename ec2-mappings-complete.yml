@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Ec2 servers"
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - test
+      - stage
+      - prod
+    Default: dev
+Mappings:
+  AMIBasedOnRegion:
+    us-east-1:
+      linux: "ami-03a6eaae9938c858c"
+    us-west-1:
+      linux: "ami-06d2c6c1b5cbaee5f"
+    eu-west-1:
+      linux: "ami-08f32efd140b7d89f"
+
+
+  EC2DetailsBasedOnEnv:
+    dev:
+      instanceType: "t2.nano"
+      VolumeSize: 8
+    test:
+      instanceType: "t2.micro"
+      VolumeSize: 10
+    stage:
+      instanceType: "t2.small"
+      VolumeSize: 12
+    prod:
+      instanceType: "t2.medium"
+      VolumeSize: 14
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [AMIBasedOnRegion, !Ref "AWS::Region", "linux"]
+      InstanceType: !FindInMap [EC2DetailsBasedOnEnv, !Ref Environment , "instanceType"]
+      BlockDeviceMappings:
+      - DeviceName: "/dev/xvda"
+        Ebs:
+          VolumeType: "io1"
+          Iops: "200"
+          DeleteOnTermination: "true"
+          VolumeSize: !FindInMap [EC2DetailsBasedOnEnv, !Ref Environment, "VolumeSize"]
