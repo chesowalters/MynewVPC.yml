@@ -1,37 +1,3 @@
-AWSTemplateFormatVersion: 2010-09-09
-Description: ---
-Metadata: 
-
-Parameters: 
 
 
-Mappings: 
 
-Conditions: 
-
-Resources: 
-  myVPC:
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: --.--.--.--/--
-      EnableDnsSupport: true
-      Tags:
-        - Key: keyname
-          Value: value
-  
-  
-  PublicSubnet1:
-    Type: AWS::EC2::InternetGateway
-    Properties:
-      Tags:
-        - Key: keyname
-          Value: value
-  AttachGateway:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      VpcId: vpc-id
-      InternetGatewayId: !Ref 
-  PublicSubnet1CidrBlock
-
-
-Outputs:
